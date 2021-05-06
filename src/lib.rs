@@ -6,7 +6,7 @@ mod jwt;
 
 pub use config::{EncryptionKeyConfig, SignKeyConfig};
 pub use error::Error;
-pub use jwt::{decrypt_and_verify_auth_result, sign_and_encrypt_auth_result};
+pub use jwt::{decrypt_and_verify_auth_result, decrypt_auth_result, sign_and_encrypt_auth_result};
 
 //
 // Tests
@@ -117,8 +117,7 @@ mod tests {
             session_url: None,
         };
         let jwe =
-            sign_and_encrypt_auth_result(&in_result, signer.as_ref(), encrypter.as_ref())
-                .unwrap();
+            sign_and_encrypt_auth_result(&in_result, signer.as_ref(), encrypter.as_ref()).unwrap();
         let out_result =
             decrypt_and_verify_auth_result(&jwe, verifier.as_ref(), decrypter.as_ref()).unwrap();
         assert_eq!(in_result, out_result);
@@ -130,8 +129,7 @@ mod tests {
             session_url: None,
         };
         let jwe =
-            sign_and_encrypt_auth_result(&in_result, signer.as_ref(), encrypter.as_ref())
-                .unwrap();
+            sign_and_encrypt_auth_result(&in_result, signer.as_ref(), encrypter.as_ref()).unwrap();
         let out_result =
             decrypt_and_verify_auth_result(&jwe, verifier.as_ref(), decrypter.as_ref()).unwrap();
         assert_eq!(in_result, out_result);
@@ -143,8 +141,7 @@ mod tests {
             session_url: Some("https://example.com".to_string()),
         };
         let jwe =
-            sign_and_encrypt_auth_result(&in_result, signer.as_ref(), encrypter.as_ref())
-                .unwrap();
+            sign_and_encrypt_auth_result(&in_result, signer.as_ref(), encrypter.as_ref()).unwrap();
         let out_result =
             decrypt_and_verify_auth_result(&jwe, verifier.as_ref(), decrypter.as_ref()).unwrap();
         assert_eq!(in_result, out_result);
@@ -176,8 +173,7 @@ mod tests {
             session_url: None,
         };
         let jwe =
-            sign_and_encrypt_auth_result(&in_result, signer.as_ref(), encrypter.as_ref())
-                .unwrap();
+            sign_and_encrypt_auth_result(&in_result, signer.as_ref(), encrypter.as_ref()).unwrap();
         let out_result =
             decrypt_and_verify_auth_result(&jwe, verifier.as_ref(), decrypter.as_ref()).unwrap();
         assert_eq!(in_result, out_result);
@@ -189,8 +185,7 @@ mod tests {
             session_url: None,
         };
         let jwe =
-            sign_and_encrypt_auth_result(&in_result, signer.as_ref(), encrypter.as_ref())
-                .unwrap();
+            sign_and_encrypt_auth_result(&in_result, signer.as_ref(), encrypter.as_ref()).unwrap();
         let out_result =
             decrypt_and_verify_auth_result(&jwe, verifier.as_ref(), decrypter.as_ref()).unwrap();
         assert_eq!(in_result, out_result);
@@ -202,8 +197,7 @@ mod tests {
             session_url: Some("https://example.com".to_string()),
         };
         let jwe =
-            sign_and_encrypt_auth_result(&in_result, signer.as_ref(), encrypter.as_ref())
-                .unwrap();
+            sign_and_encrypt_auth_result(&in_result, signer.as_ref(), encrypter.as_ref()).unwrap();
         let out_result =
             decrypt_and_verify_auth_result(&jwe, verifier.as_ref(), decrypter.as_ref()).unwrap();
         assert_eq!(in_result, out_result);
