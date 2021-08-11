@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use josekit::{jwe::{JweDecrypter, JweEncrypter, JweHeader}, jws::{JwsHeader, JwsSigner, JwsVerifier}, jwt::{self, JwtPayload, JwtPayloadValidator}};
 
-use id_contact_proto::{AuthResult, AuthStatus};
+use id_contact_proto::{AuthResult, AuthStatus, AuthSelectParams};
 
 use crate::error::Error;
 
@@ -103,4 +103,31 @@ pub fn decrypt_and_verify_auth_result(
     decrypter: &dyn JweDecrypter,
 ) -> Result<AuthResult, Error> {
     raw_decrypt_and_verify_auth_result(jwe, validator, decrypter, true)
+}
+
+/// Serialize and sign a set of AuthSelectParams for use in the auth-select menu
+pub fn sign_auth_select_params(
+    params: AuthSelectParams,
+    signer: &dyn JwsSigner,
+) -> Result<String, Error> {
+    let mut sig_header = JwsHeader::new();
+    sig_header.set_token_type("JWT");
+    let mut sig_payload = JwtPayload::new();
+    sig_payload.set_subject("id-contact-widget-params");
+
+    sig_payload.set_claim("purpose", Some(serde_json::to_value(&params.purpose)?))?;
+    sig_payload.set_claim("start_url", Some(serde_json::to_value(&params.start_url)?))?;
+    sig_payload.set_claim(
+        "display_name",
+        Some(serde_json::to_value(&params.display_name)?),
+    )?;
+
+    sig_payload.set_issued_at(&std::time::SystemTime::now());
+    sig_payload.set_expires_at(
+        &(std::time::SystemTime::now() + std::time::Duration::from_secs(5 * 60)),
+    );
+
+    let jws = josekit::jwt::encode_with_signer(&sig_payload, &sig_header, signer)?;
+
+    Ok(jws)
 }
